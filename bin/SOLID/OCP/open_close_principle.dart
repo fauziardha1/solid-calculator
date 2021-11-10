@@ -52,12 +52,14 @@ class OCP {
   // count number of children for each class
   int countNumberOfChildren(UMLClass cls, List<UMLClass> listCls) {
     int numOfChildren = 0;
-    for (var i = 0; i < listCls.length; i++) {
-      if (listCls[i].parent != null &&
-          listCls[i].parent.ref != "" &&
-          listCls[i].parent.ref == cls.id) {
+    listCls.remove(cls);
+
+    for (var aClass in listCls) {
+      // check its dependency, does it contain UMLGeneralization and target.ref is cls.ref
+      if (aClass.ownedElements.any((element) =>
+          element.target.ref == cls.id &&
+          element.type == "UMLGeneralization")) {
         numOfChildren++;
-        numOfChildren += countNumberOfChildren(listCls[i], listCls);
       }
     }
     return numOfChildren;

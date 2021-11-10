@@ -16,7 +16,7 @@ main(List<String> args) async {
 
   // path for testing OCP
   String path =
-      '/Users/fauzi.saputra/Documents/thesis_uml_project/ocp_bad_case.mdj';
+      '/Users/fauzi.saputra/Documents/thesis_uml_project/ocp_good_case.mdj';
 
   // parsing to be project
   project = await loadProject(path);
