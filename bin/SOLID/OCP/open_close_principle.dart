@@ -1,4 +1,5 @@
 import '../../model/class_data_model.dart';
+import '../../model/dependency_data_model.dart';
 import '../query_const.dart';
 
 class OCP {
@@ -11,8 +12,8 @@ class OCP {
 
   OCP({required this.classes, required this.modelID}) {
     setListNOC(classes);
-    setNumOfSUP(classes);
-    _numOfCOCP = countnumOfCOCP(listNOC);
+    setNumOfSUP(_listNOC);
+    _numOfCOCP = countnumOfCOCP(_listNOC);
     _valueOCP = calculateValueOCP(_numOfCOCP, _numOfSUP);
   }
 
@@ -20,17 +21,27 @@ class OCP {
   List<Map<String, dynamic>> get listNOC => _listNOC;
 
   // get Depth of Inheritance from a class
+  // return number of parent of a class
   int getDepthOfInheritanceFromClass(UMLClass cls, List<UMLClass> listCls) {
     int depth = 0;
-    late UMLClass parent;
-    print(
-        "not in => ${cls.name} : $depth, isParentNull:${cls.parent == null}, parent.ref : ${cls.parent.ref}");
-    if (cls.parent != null &&
-        cls.parent.ref != "" &&
-        cls.parent.ref != modelID) {
-      print("${cls.name} : $depth");
-      parent = listCls.firstWhere((element) => element.id == cls.parent.ref);
-      depth = getDepthOfInheritanceFromClass(parent, listCls) + 1;
+    late UMLDependency dependency;
+    late UMLClass temp;
+
+    // if dependency list is empty, it's base class
+    if (cls.ownedElements.isNotEmpty) {
+      // get parent class
+      dependency = cls.ownedElements
+          .firstWhere((element) => element.type == "UMLGeneralization");
+
+      try {
+        temp = listCls
+            .firstWhere((element) => element.id == dependency.target.ref);
+      } catch (e) {
+        print("error: $e");
+        return depth;
+      }
+
+      depth = getDepthOfInheritanceFromClass(temp, listCls) + 1;
     }
     return depth;
   }
@@ -52,7 +63,6 @@ class OCP {
   // count number of children for each class
   int countNumberOfChildren(UMLClass cls, List<UMLClass> listCls) {
     int numOfChildren = 0;
-    listCls.remove(cls);
 
     for (var aClass in listCls) {
       // check its dependency, does it contain UMLGeneralization and target.ref is cls.ref
@@ -68,9 +78,10 @@ class OCP {
   // count number of COCP
   int countnumOfCOCP(List<Map<String, dynamic>> listNOC) {
     int count = 0;
-
     for (var cOCP in listNOC) {
-      if (cOCP[IsAbstract] && cOCP[DIT] > 0) {
+      print(cOCP);
+      if (cOCP[IsAbstract] && cOCP[NOC] > 0) {
+        print("countnumOfCOCP - className" + cOCP[CLASSNAME]);
         count++;
       }
     }
@@ -79,10 +90,10 @@ class OCP {
   }
 
   // initiate numOfSUP value
-  void setNumOfSUP(List<UMLClass> listCls) {
+  void setNumOfSUP(List<Map<String, dynamic>> listCls) {
     _numOfSUP = 0;
     listCls.forEach((element) {
-      _numOfSUP += element.parent.ref == modelID ? 1 : 0;
+      _numOfSUP += element[DIT] == 0 ? 1 : 0;
     });
   }
 

@@ -10,26 +10,17 @@ import 'model/mainmodel_data_model.dart';
 main(List<String> args) async {
   late UMLProject project;
   late List<UMLClass> classes;
-  // String path = '/Users/fauzi.saputra/Documents/Person.mdj';
-  // String path =
-  //     '/Users/fauzi.saputra/Documents/thesis_uml_project/separated_mobile_phone.mdj';
-
-  // path for testing OCP
-  String path =
-      '/Users/fauzi.saputra/Documents/thesis_uml_project/ocp_good_case.mdj';
+  late String modelID;
 
   // parsing to be project
-  project = await loadProject(path);
-  classes = project.ownedElements[0].ownedElements;
+  project = await loadProject(paths[OCPBadPath] as String);
+  modelID = project.ownedElements.first.id;
+  classes = project.ownedElements.first.ownedElements;
 
-  // print(project.ownedElements[0].ownedElements[0].toString());
-
-  print("class length : " + classes.length.toString());
-
-  // printSRP(classes);
+  printSRP(classes);
 
   // test OCP
-  printOCP(classes, project.ownedElements[0].id);
+  printOCP(classes, modelID);
 }
 
 // load Project from mdj file
@@ -68,6 +59,7 @@ Future<UMLProject> loadProject(String path) async {
   return project;
 }
 
+// print SRP is a void to test SRP calculation
 printSRP(List<UMLClass> classes) {
   SRP srp = SRP(classes: classes);
 
@@ -81,10 +73,14 @@ printSRP(List<UMLClass> classes) {
   }
 }
 
+// print OCP is void to test OCP calculation
 printOCP(List<UMLClass> classes, String modelID) {
   OCP ocp = OCP(classes: classes, modelID: modelID);
 
-  print("OCP : " + ocp.valueOCP.toString() + "\n");
+  print("VOCP : " +
+      ocp.valueOCP.toString() +
+      "\n" +
+      ocp.listNOC.length.toString());
 
   // print all camc
   for (var element in ocp.listNOC) {
