@@ -7,7 +7,8 @@ const NOC = "numberOfChildren";
 const SRPPath = "SRPPath";
 const OCPBadPath = "OCPPath";
 const OCPGoodPath = "OCPGoodPath";
-const LSPPath = "LSPPath";
+const LSPBadPath = "LSPPath";
+const LSPGoodPath = "LSPGoodPath";
 const ISPPath = "ISPPath";
 const DIPPath = "DIPPath";
 
@@ -18,7 +19,10 @@ const Map<String, String> paths = {
       '/Users/fauzi.saputra/Documents/thesis_uml_project/ocp_bad_case.mdj',
   OCPGoodPath:
       '/Users/fauzi.saputra/Documents/thesis_uml_project/ocp_good_case.mdj',
-  LSPPath: "LSP",
+  LSPBadPath:
+      "/Users/fauzi.saputra/Documents/thesis_uml_project/lsp_bad_case.mdj",
+  LSPGoodPath:
+      '/Users/fauzi.saputra/Documents/thesis_uml_project/lsp_good_case.mdj',
   ISPPath: "ISP",
   DIPPath: "DIP",
 };

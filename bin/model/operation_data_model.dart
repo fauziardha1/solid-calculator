@@ -10,12 +10,15 @@ class UMLOperation {
   Parent parent;
   String name;
   List<UMLParameter> parameters;
+  bool isAbstract;
+
   UMLOperation({
     required this.type,
     required this.id,
     required this.parent,
     required this.name,
     required this.parameters,
+    required this.isAbstract,
   });
 
   UMLOperation copyWith({
@@ -24,6 +27,7 @@ class UMLOperation {
     Parent? parent,
     String? name,
     List<UMLParameter>? parameters,
+    bool? isAbstract,
   }) {
     return UMLOperation(
       type: type ?? this.type,
@@ -31,6 +35,7 @@ class UMLOperation {
       parent: parent ?? this.parent,
       name: name ?? this.name,
       parameters: parameters ?? this.parameters,
+      isAbstract: isAbstract ?? this.isAbstract,
     );
   }
 
@@ -41,6 +46,7 @@ class UMLOperation {
       '_parent': parent.toMap(),
       'name': name,
       'parameters': parameters.map((x) => x.toMap()).toList(),
+      'isAbstract': isAbstract,
     };
   }
 
@@ -54,6 +60,7 @@ class UMLOperation {
           ? <UMLParameter>[]
           : List<UMLParameter>.from(
               map['parameters']?.map((x) => UMLParameter.fromMap(x))),
+      isAbstract: map["isAbstract"] ?? false,
     );
   }
 
@@ -64,7 +71,8 @@ class UMLOperation {
 
   @override
   String toString() {
-    return 'UMLOperation(_type: $type, _id: $id, _parent: $parent, name: $name, parameters: $parameters)';
+    return 'UMLOperation(_type: $type, _id: $id, _parent: $parent, '
+        'name: $name, parameters: $parameters, isAbstract: $isAbstract)';
   }
 
   @override
@@ -77,6 +85,7 @@ class UMLOperation {
         other.id == id &&
         other.parent == parent &&
         other.name == name &&
+        other.isAbstract == isAbstract &&
         listEquals(other.parameters, parameters);
   }
 
@@ -86,6 +95,7 @@ class UMLOperation {
         id.hashCode ^
         parent.hashCode ^
         name.hashCode ^
+        isAbstract.hashCode ^
         parameters.hashCode;
   }
 }

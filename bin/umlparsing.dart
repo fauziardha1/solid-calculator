@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'SOLID/LSP/liskov_subtitution_principle.dart';
 import 'SOLID/OCP/open_close_principle.dart';
 import 'SOLID/SRP/single_responsibility_principle.dart';
 import 'SOLID/query_const.dart';
@@ -13,14 +14,17 @@ main(List<String> args) async {
   late String modelID;
 
   // parsing to be project
-  project = await loadProject(paths[OCPBadPath] as String);
+  project = await loadProject(paths[LSPGoodPath] as String);
   modelID = project.ownedElements.first.id;
   classes = project.ownedElements.first.ownedElements;
 
-  printSRP(classes);
+  // printSRP(classes);
 
   // test OCP
-  printOCP(classes, modelID);
+  // printOCP(classes, modelID);
+
+  // test LSP
+  printLSP(classes);
 }
 
 // load Project from mdj file
@@ -90,4 +94,13 @@ printOCP(List<UMLClass> classes, String modelID) {
     print("NOC : ${element[NOC]}");
     print("DIT : ${element[DIT]}\n");
   }
+}
+
+printLSP(List<UMLClass> classes) {
+  LiskovSubstitutionPrinciple lsp =
+      LiskovSubstitutionPrinciple(classes: classes);
+
+  print("LSP : \n" + lsp.toString());
+
+  print(lsp.valueOfLSP.toString());
 }
