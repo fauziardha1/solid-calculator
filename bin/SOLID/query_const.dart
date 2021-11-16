@@ -9,7 +9,8 @@ const OCPBadPath = "OCPPath";
 const OCPGoodPath = "OCPGoodPath";
 const LSPBadPath = "LSPPath";
 const LSPGoodPath = "LSPGoodPath";
-const ISPPath = "ISPPath";
+const ISPBadPath = "ISPBadPath";
+const ISPGoodPath = "ISPGoodPath";
 const DIPPath = "DIPPath";
 
 const Map<String, String> paths = {
@@ -23,6 +24,9 @@ const Map<String, String> paths = {
       "/Users/fauzi.saputra/Documents/thesis_uml_project/lsp_bad_case.mdj",
   LSPGoodPath:
       '/Users/fauzi.saputra/Documents/thesis_uml_project/lsp_good_case.mdj',
-  ISPPath: "ISP",
+  ISPBadPath:
+      '/Users/fauzi.saputra/Documents/thesis_uml_project/isp_bad_case.mdj',
+  ISPGoodPath:
+      '/Users/fauzi.saputra/Documents/thesis_uml_project/isp_good_case.mdj',
   DIPPath: "DIP",
 };

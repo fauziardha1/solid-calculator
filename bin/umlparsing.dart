@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'SOLID/ISP/interface_segregation_principle.dart';
 import 'SOLID/LSP/liskov_subtitution_principle.dart';
 import 'SOLID/OCP/open_close_principle.dart';
 import 'SOLID/SRP/single_responsibility_principle.dart';
@@ -14,7 +15,7 @@ main(List<String> args) async {
   late String modelID;
 
   // parsing to be project
-  project = await loadProject(paths[LSPGoodPath] as String);
+  project = await loadProject(paths[ISPGoodPath] as String);
   modelID = project.ownedElements.first.id;
   classes = project.ownedElements.first.ownedElements;
 
@@ -24,7 +25,25 @@ main(List<String> args) async {
   // printOCP(classes, modelID);
 
   // test LSP
-  printLSP(classes);
+  // printLSP(classes);
+
+  // for (var cls in classes) {
+  //   print("class ${cls.name} is_lsp :" +
+  //       cls.is_lsp.toString() +
+  //       "\tis_srp : " +
+  //       cls.is_srp.toString());
+  // }
+
+  // for (var cls in classes) {
+  //   print("${cls.name} is CISP");
+  //   print("SRP Status: ${cls.is_srp}, LSP Status: ${cls.isConformLSP}");
+  // }
+
+  // test ISP
+  // printISP(classes);
+
+  // test DIP
+  // printDIP(classes);
 }
 
 // load Project from mdj file
@@ -73,7 +92,7 @@ printSRP(List<UMLClass> classes) {
 
   // print all camc
   for (var element in srp.listOfCAMC) {
-    print("camc : ${element.getCAMCValue()}");
+    print("camc ${element.classToCheck.name} : ${element.getCAMCValue()}");
   }
 }
 
@@ -103,4 +122,10 @@ printLSP(List<UMLClass> classes) {
   print("LSP : \n" + lsp.toString());
 
   print(lsp.valueOfLSP.toString());
+}
+
+printISP(List<UMLClass> classes) {
+  InterfaceSegregationPrinciple isp = InterfaceSegregationPrinciple(classes);
+
+  print("ISP : \n" + isp.toString());
 }

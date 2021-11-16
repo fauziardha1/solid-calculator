@@ -31,6 +31,7 @@ class SRP {
     for (var camc in listOfCAMC) {
       if (camc.getCAMCValue() >= .35) {
         nCSRP++;
+        camc.classToCheck.is_srp = true;
       }
     }
     return nCSRP;

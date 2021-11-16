@@ -4,6 +4,7 @@ class LiskovSubstitutionPrinciple {
   int _numConformLSP = 0;
   List<UMLClass> classes = [];
   int _numOfHierarchy = 0;
+  // ignore: prefer_final_fields
   List<UMLClass> _hierarchys = [];
   double _valueOfLSP = 0;
 
@@ -59,7 +60,8 @@ class LiskovSubstitutionPrinciple {
       // for each ownedElement in child ownedElements,
       // check if it is UMLGeneralization and target.ref is equal to cls.id
       for (var ownedElement in child.ownedElements) {
-        if (ownedElement.type == 'UMLGeneralization' &&
+        if (
+            //  ownedElement.type == 'UMLGeneralization' &&
             ownedElement.target.ref == cls.id) {
           // check if this child has children
           child = setupClassMemberInheritance(child, classList);
@@ -74,7 +76,9 @@ class LiskovSubstitutionPrinciple {
 
   // step 2: for hierarchy, calculate nmi, nme, nmo
   stepTwo(List<UMLClass> hierarchys) {
-    for (var hierarchy in hierarchys) {
+    for (var i = 0; i < hierarchys.length; i++) {
+      var hierarchy = hierarchys[i];
+
       // calculate nmi
       hierarchy.nmia = hierarchy.operations.length;
       hierarchy.isConformLSP = true;
@@ -83,6 +87,9 @@ class LiskovSubstitutionPrinciple {
       if (hierarchy.children.isEmpty) {
         print('hierarchy ${hierarchy.name} has no children');
         _numConformLSP++;
+        hierarchy.is_lsp = true;
+        hierarchy.isConformLSP = true;
+        continue;
       }
 
       // for each child, calculate nme and nmo
@@ -90,20 +97,49 @@ class LiskovSubstitutionPrinciple {
         child.nme = 0;
         child.nmo = 0;
 
+        // TODO: this code should be deleted
         // 2.2-1 count nme:  for each operation in child, check if it equal to hierarchy operation
-        for (var operation in child.operations) {
-          for (var operationHierarchy in hierarchy.operations) {
-            if (!operationHierarchy.isAbstract) {
-              continue;
-            }
-            if (operation.name == operationHierarchy.name &&
-                operation.parameters.length ==
-                    operationHierarchy.parameters.length) {
+        // for (var operation in child.operations) {
+        //   for (var operationHierarchy in hierarchy.operations) {
+        //     if (!operationHierarchy.isAbstract) {
+        //       continue;
+        //     }
+        //     if (operation.name == operationHierarchy.name &&
+        //         operation.parameters.length ==
+        //             operationHierarchy.parameters.length) {
+        //       // check if operation parameter is equal to operationHierarchy parameter
+        //       bool isEqual = true;
+        //       for (var i = 0; i < operation.parameters.length; i++) {
+        //         if (operation.parameters[i].dataType !=
+        //             operationHierarchy.parameters[i].dataType) {
+        //           isEqual = false;
+        //           break;
+        //         }
+        //       }
+        //       child.nme += isEqual ? 1 : 0;
+        //     }
+        //   }
+        // }
+
+        // refactoring version of nme and nmia calculation
+        for (var hryIdx = 0; hryIdx < hierarchy.operations.length; hryIdx++) {
+          var hryOperation = hierarchy.operations[hryIdx];
+          if (!hryOperation.isAbstract) {
+            continue;
+          }
+
+          for (var childIdx = 0;
+              childIdx < child.operations.length;
+              childIdx++) {
+            var childOperation = child.operations[childIdx];
+            if (childOperation.name == hryOperation.name &&
+                childOperation.parameters.length ==
+                    hryOperation.parameters.length) {
               // check if operation parameter is equal to operationHierarchy parameter
               bool isEqual = true;
-              for (var i = 0; i < operation.parameters.length; i++) {
-                if (operation.parameters[i].dataType !=
-                    operationHierarchy.parameters[i].dataType) {
+              for (var i = 0; i < childOperation.parameters.length; i++) {
+                if (childOperation.parameters[i].dataType !=
+                    hryOperation.parameters[i].dataType) {
                   isEqual = false;
                   break;
                 }
@@ -113,29 +149,70 @@ class LiskovSubstitutionPrinciple {
           }
         }
 
-        // 2.2-2 for each operation in child, count nmo
-        for (var operation in child.operations) {
-          // if operation is equal to operationHierarchy, nmo++
-          for (var operationHierarchy in hierarchy.operations) {
-            if (operationHierarchy.isAbstract) {
-              continue;
-            }
-            if (operation.name == operationHierarchy.name &&
+        // 2.2-2 for each operation in child, count nmo // TODO : old code should be deleted
+        // for (var operation in child.operations) {
+        //   // if operation is equal to operationHierarchy, nmo++
+        //   for (var operationHierarchy in hierarchy.operations) {
+        //     if (operationHierarchy.isAbstract) {
+        //       continue;
+        //     }
+        //     if (operation.name == operationHierarchy.name &&
+        //         operation.parameters.length ==
+        //             operationHierarchy.parameters.length) {
+        //       // check if operation parameter is equal to operationHierarchy parameter
+        //       bool isEqual = true;
+        //       for (var i = 0; i < operation.parameters.length; i++) {
+        //         if (operation.parameters[i].dataType !=
+        //             operationHierarchy.parameters[i].dataType) {
+        //           isEqual = false;
+        //           break;
+        //         }
+        //       }
+        //       child.nmo += isEqual ? 1 : 0;
+        //     } else if (operation.name == operationHierarchy.name &&
+        //         operation.parameters.length !=
+        //             operationHierarchy.parameters.length) {
+        //       print("operation overloading");
+        //       child.nmo++;
+        //     }
+        //   }
+        // }
+
+        // refactroing code to make it correct for nmo
+        for (var i = 0; i < hierarchy.operations.length; i++) {
+          var operation = hierarchy.operations[i];
+
+          if (operation.isAbstract) {
+            continue;
+          }
+
+          // check similarity of operation and child operation
+          for (var childOptIdx = 0;
+              childOptIdx < child.operations.length;
+              childOptIdx++) {
+            var childOperation = child.operations[childOptIdx];
+
+            // TODO : add condition for operation return value
+            if (operation.name == childOperation.name &&
                 operation.parameters.length ==
-                    operationHierarchy.parameters.length) {
+                    childOperation.parameters.length) {
               // check if operation parameter is equal to operationHierarchy parameter
               bool isEqual = true;
-              for (var i = 0; i < operation.parameters.length; i++) {
-                if (operation.parameters[i].dataType !=
-                    operationHierarchy.parameters[i].dataType) {
+              for (var paramIdx = 0;
+                  paramIdx < operation.parameters.length;
+                  paramIdx++) {
+                if (operation.parameters[paramIdx].dataType !=
+                    childOperation.parameters[paramIdx].dataType) {
                   isEqual = false;
                   break;
                 }
               }
-              child.nmo += isEqual ? 1 : 0;
-            } else if (operation.name == operationHierarchy.name &&
+              if (isEqual) {
+                child.nmo++;
+              }
+            } else if (operation.name == childOperation.name &&
                 operation.parameters.length !=
-                    operationHierarchy.parameters.length) {
+                    childOperation.parameters.length) {
               print("operation overloading");
               child.nmo++;
             }
@@ -152,6 +229,8 @@ class LiskovSubstitutionPrinciple {
         }
       }
       _numConformLSP += hierarchy.isConformLSP ? 1 : 0;
+      hierarchy.is_lsp =
+          hierarchy.isConformLSP; // set is_lsp for ISP calculation
 
       for (var child in hierarchy.children) {
         if (child.nme < hierarchy.nmia && child.isAbstract) {
@@ -204,6 +283,8 @@ class LiskovSubstitutionPrinciple {
 
   double get valueOfLSP => _valueOfLSP;
 
+  List<UMLClass> get hierarchys => _hierarchys;
+
   @override
   String toString() {
     StringBuffer sb = StringBuffer();
@@ -214,6 +295,8 @@ class LiskovSubstitutionPrinciple {
       sb.write('Class: ${cls.name}\n');
       sb.write('\tNumber of children: ${cls.numOfChildren}\n');
       sb.write('\tBaseClass: ${cls.isBaseClass ? "YES" : "NO"}\n');
+      sb.write('\tConform LSP: ${cls.isConformLSP ? "YES" : "NO"}\n');
+      sb.write('\tConform SRP: ${cls.is_srp ? "YES" : "NO"}\n');
       sb.write('\tChildren: ');
       for (var child in cls.children) {
         sb.write('${child.name}, ');
