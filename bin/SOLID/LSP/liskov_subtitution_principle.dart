@@ -39,8 +39,6 @@ class LiskovSubstitutionPrinciple {
       _numOfHierarchy += cls.ownedElements.isEmpty ? 1 : 0;
     }
 
-    print('setup Number of Hierarchy: $_numOfHierarchy');
-
     for (var cls in classList) {
       cls = setupClassMemberInheritance(cls, classList);
     }
@@ -86,9 +84,9 @@ class LiskovSubstitutionPrinciple {
       // if class has children, it's conform LSP
       if (hierarchy.children.isEmpty) {
         print('hierarchy ${hierarchy.name} has no children');
-        _numConformLSP++;
-        hierarchy.is_lsp = true;
-        hierarchy.isConformLSP = true;
+        // _numConformLSP++;
+        // hierarchy.is_lsp = true;
+        // hierarchy.isConformLSP = true;
         continue;
       }
 
@@ -288,7 +286,9 @@ class LiskovSubstitutionPrinciple {
   @override
   String toString() {
     StringBuffer sb = StringBuffer();
+    sb.write("#" * 20 + " LSP " + "#" * 20 + "\n");
     sb.write('Liskov Substitution Principle:\n');
+    sb.write("\x1B[33mValue of DIP: ${_valueOfLSP}\x1B[0m\n");
     sb.write('Number of Hierarchy (NOH): $_numOfHierarchy\n');
     sb.write('Number of CLSP : $_numConformLSP\n');
     for (var cls in _hierarchys) {
@@ -304,6 +304,7 @@ class LiskovSubstitutionPrinciple {
       }
       sb.write('\n');
     }
+    sb.write('#' * 20 + '#' * 20 + '\n');
     return sb.toString();
   }
 }

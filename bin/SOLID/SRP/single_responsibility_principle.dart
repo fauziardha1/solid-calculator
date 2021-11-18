@@ -46,7 +46,16 @@ class SRP {
   // override to string
   @override
   String toString() {
-    return 'SRP{classes: $classes, valueOfSRP: $valueOfSRP, numOfConformSRP: $numOfConformSRP, numOfClasses: $numOfClasses, listOfCAMC: $listOfCAMC}';
+    StringBuffer sb = StringBuffer();
+    sb.write("#" * 20 + " SRP " + "#" * 20 + "\n");
+    sb.write("Single Responsibility Principle: \n");
+    sb.write("\x1B[33mValue of SRP: $valueOfSRP \x1B[0m\n");
+    sb.write("Number of classes: $numOfClasses \n");
+    sb.write("Number of classes that conform SRP: $numOfConformSRP \n");
+    sb.write("#" * 20 + "#" * 20 + "\n");
+    return sb.toString();
+
+    // return 'SRP{classes: ${classes.length}, valueOfSRP: $valueOfSRP, numOfConformSRP: $numOfConformSRP, numOfClasses: $numOfClasses, listOfCAMC: $listOfCAMC}';
   }
 }
 
@@ -124,6 +133,6 @@ class CAMC {
   // override to string
   @override
   String toString() {
-    return 'CAMC{classToCheck: $classToCheck, camcValue: $camcValue, numOfOperationInClass: $numOfOperationInClass, numOfParameterTypeInClass: $numOfParameterTypeInClass, listOfParameterTypeInClass: $listOfParameterTypeInClass}';
+    return 'CAMC{classToCheck: ${classToCheck.name}, camcValue: $camcValue, numOfOperationInClass: $numOfOperationInClass, numOfParameterTypeInClass: $numOfParameterTypeInClass, listOfParameterTypeInClass: $listOfParameterTypeInClass}';
   }
 }

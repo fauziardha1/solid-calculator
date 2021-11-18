@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 
+import '../SOLID/DIP/mixin_dip.dart';
 import '../SOLID/ISP/mixin_isp.dart';
 import '../SOLID/LSP/mixin_lsp.dart';
 import 'attribute_data_model.dart';
@@ -9,7 +10,7 @@ import 'dependency_data_model.dart';
 import 'operation_data_model.dart';
 import 'parent_data_model.dart';
 
-class UMLClass with LSPAttributes, ISPAttributes {
+class UMLClass with LSPAttributes, ISPAttributes, DIPAttributes {
   String type;
   String id;
   Parent parent;

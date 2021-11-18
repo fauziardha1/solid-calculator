@@ -35,7 +35,9 @@ class InterfaceSegregationPrinciple {
   }
 
   double _getValueOfISP() {
-    return _numOfCISP / _numOfInterface;
+    return _numOfCISP == 0 || _numOfInterface == 0
+        ? 0
+        : _numOfCISP / _numOfInterface;
   }
 
   double get valueOfISP => _valueOfISP;
@@ -43,7 +45,10 @@ class InterfaceSegregationPrinciple {
   @override
   String toString() {
     StringBuffer sb = StringBuffer();
+    sb.writeln("#" * 20 + " ISP " + "#" * 20);
     sb.write("Interface Segregation Principle");
+    sb.write("\n");
+    sb.write("\x1B[33mValue of SRP: $_valueOfISP \x1B[0m");
     sb.write("\n");
     sb.write("Number of Interface: ");
     sb.write(_numOfInterface);
@@ -51,11 +56,9 @@ class InterfaceSegregationPrinciple {
     sb.write("Number of Confirm ISP: ");
     sb.write(_numOfCISP);
     sb.write("\n");
-    sb.write("Value of ISP: ");
-    sb.write(_valueOfISP);
-    sb.write("\n");
 
-    sb.write("interface len : " + listInterface.length.toString());
+    sb.writeln("interface len : " + listInterface.length.toString());
+    sb.writeln("#" * 40);
     return sb.toString();
   }
 }

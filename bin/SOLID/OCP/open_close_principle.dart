@@ -30,8 +30,13 @@ class OCP {
     // if dependency list is empty, it's base class
     if (cls.ownedElements.isNotEmpty) {
       // get parent class
-      dependency = cls.ownedElements
-          .firstWhere((element) => element.type == "UMLGeneralization");
+      try {
+        dependency = cls.ownedElements
+            .firstWhere((element) => element.type == "UMLGeneralization");
+      } catch (e) {
+        print("no data UMLGeneraliztion here");
+        return depth;
+      }
 
       try {
         temp = listCls
@@ -79,9 +84,7 @@ class OCP {
   int countnumOfCOCP(List<Map<String, dynamic>> listNOC) {
     int count = 0;
     for (var cOCP in listNOC) {
-      print(cOCP);
       if (cOCP[IsAbstract] && cOCP[NOC] > 0) {
-        print("countnumOfCOCP - className" + cOCP[CLASSNAME]);
         count++;
       }
     }
@@ -100,5 +103,17 @@ class OCP {
   // calulate value of OCP
   double calculateValueOCP(int nCOCP, int nSUP) {
     return (nCOCP / nSUP).toDouble();
+  }
+
+  @override
+  String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.write("#" * 20 + " OCP " + "#" * 20 + "\n");
+    sb.writeln("Open/Closed Prinsiple:");
+    sb.write("\x1B[33mValue of OCP: " + valueOCP.toString() + "\x1B[0m\n");
+    sb.write("Number of COCP: " + _numOfCOCP.toString() + "\n");
+    sb.write("Number of SUP: " + _numOfSUP.toString() + "\n");
+    sb.write("#" * 20 + "#" * 20 + "\n");
+    return sb.toString();
   }
 }
